@@ -2,7 +2,7 @@
 // CONFIGURATION — paste your Apps Script Web App URL below after deploying
 // ══════════════════════════════════════════════════════════════════════════════
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbz3j5TLczYbN09EqZmQWYnX_BGowfBiobLUorkEfy9rJd2yF0zGEUYvhHd-XNGL3mQw/exec";
+  "https://script.google.com/macros/s/AKfycbwXuBrm8-Qd_jJQKiEceJcyRwbopsfGbSfSQxRKqm-pFkSPek34qg4h-LbHg7L_ECQ5/exec";
 
 function isAppsScriptWebAppUrl(url) {
   return /https:\/\/script\.google\.com\/macros\/s\/.+\/(exec|dev)$/.test(
@@ -260,6 +260,9 @@ async function apiPost(body) {
   console.log("[API POST] Sending body:", body);
   if (body?.data) {
     console.log("[API POST] body.data:", body.data);
+  }
+  if (body?.dataJson) {
+    console.log("[API POST] body.dataJson:", body.dataJson);
   }
 
   await fetch(APPS_SCRIPT_URL, {
@@ -826,10 +829,12 @@ function schedSave() {
   saveTimer = setTimeout(async () => {
     const { filled } = filledCount(S.currentForm);
     let saveOk = false;
+    const payloadData = { form: S.currentForm, filledCount: filled };
     const savePayload = {
       action: "save",
       player: S.selectedPlayer,
-      data: { form: S.currentForm, filledCount: filled },
+      data: payloadData,
+      dataJson: JSON.stringify(payloadData),
     };
 
     // Debug helper: inspect this in browser console when testing saves.
@@ -864,10 +869,12 @@ async function doSubmit() {
   render();
   const { filled } = filledCount(S.currentForm);
   try {
+    const payloadData = { form: S.currentForm, filledCount: filled };
     const res = await apiPost({
       action: "submit",
       player: S.selectedPlayer,
-      data: { form: S.currentForm, filledCount: filled },
+      data: payloadData,
+      dataJson: JSON.stringify(payloadData),
     });
     if (!res?.ok) throw new Error("Submit returned not-ok response");
     S.currentSubmitted = true;
