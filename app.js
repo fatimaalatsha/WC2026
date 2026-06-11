@@ -258,12 +258,8 @@ async function apiGet(params) {
 // no-cors means we can't read the response, but the write still happens in the sheet
 async function apiPost(body) {
   console.log("[API POST] Sending body:", body);
-  if (typeof body?.data === "string") {
-    try {
-      console.log("[API POST] Parsed body.data:", JSON.parse(body.data));
-    } catch {
-      console.log("[API POST] body.data is not JSON:", body.data);
-    }
+  if (body?.data) {
+    console.log("[API POST] body.data:", body.data);
   }
 
   await fetch(APPS_SCRIPT_URL, {
@@ -833,13 +829,13 @@ function schedSave() {
     const savePayload = {
       action: "save",
       player: S.selectedPlayer,
-      data: JSON.stringify({ form: S.currentForm, filledCount: filled }),
+      data: { form: S.currentForm, filledCount: filled },
     };
 
     // Debug helper: inspect this in browser console when testing saves.
     window.__lastSavePayload = savePayload;
     console.log("[SAVE] Sending payload:", savePayload);
-    console.log("[SAVE] Parsed data:", JSON.parse(savePayload.data));
+    console.log("[SAVE] Data:", savePayload.data);
 
     try {
       const res = await apiPost(savePayload);
@@ -871,7 +867,7 @@ async function doSubmit() {
     const res = await apiPost({
       action: "submit",
       player: S.selectedPlayer,
-      data: JSON.stringify({ form: S.currentForm, filledCount: filled }),
+      data: { form: S.currentForm, filledCount: filled },
     });
     if (!res?.ok) throw new Error("Submit returned not-ok response");
     S.currentSubmitted = true;
