@@ -265,11 +265,17 @@ async function apiPost(body) {
     console.log("[API POST] body.dataJson:", body.dataJson);
   }
 
+  const encodedPayload = new URLSearchParams({
+    payload: JSON.stringify(body),
+  }).toString();
+
   await fetch(APPS_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors", // bypass CORS — we just need the write to happen
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+    },
+    body: encodedPayload,
   });
   // no-cors gives us an opaque response — we can't read it
   // so we assume ok:true and let the next load verify
@@ -868,6 +874,7 @@ async function doSubmit() {
   S.isSaving = true;
   render();
   const { filled } = filledCount(S.currentForm);
+  const nowIso = new Date().toISOString();
   try {
     const payloadData = { form: S.currentForm, filledCount: filled };
     const res = await apiPost({
@@ -880,7 +887,7 @@ async function doSubmit() {
     S.currentSubmitted = true;
     S.allStatuses[S.selectedPlayer] = {
       submitted: true,
-      submittedAt: res.submittedAt,
+      submittedAt: nowIso,
       filledCount: filled,
     };
     toast("🔒 Predictions locked and saved to Google Sheets!");
