@@ -2,8 +2,8 @@
 // CONFIGURATION — paste your Apps Script Web App URL below after deploying
 // ══════════════════════════════════════════════════════════════════════════════
 const APPS_SCRIPT_URL =
-    //   "https://script.google.com/macros/s/AKfycbzAaidQgeK1HKKpiedHavf5prDDHh3xcKbu26L775ecYpA-Xw5E2UBlaZq9Uqg_RQ-T/exec";
-    
+  //   "https://script.google.com/macros/s/AKfycbzAaidQgeK1HKKpiedHavf5prDDHh3xcKbu26L775ecYpA-Xw5E2UBlaZq9Uqg_RQ-T/exec";
+
   "https://script.google.com/macros/s/AKfycbwoTsp2mIawWIHT_XyPUVEiCuA6S4vZ17mNozBbMo0-T_t04CW1kTfK4Gpwf5MyTwDHyA/exec";
 
 function isAppsScriptWebAppUrl(url) {
@@ -15,15 +15,16 @@ function isAppsScriptWebAppUrl(url) {
 // ── PLAYERS ───────────────────────────────────────────────────────────────────
 const PLAYERS = [
   { name: "Fatima", passcode: "1111", color: "#E63946" },
-  { name: "Feras", passcode: "2222", color: "#1A56B0" },
+  { name: "Feras", passcode: "1212", color: "#1A56B0" },
   { name: "Marteena", passcode: "3333", color: "#1A7A4A" },
   { name: "Hussain", passcode: "4444", color: "#D4A017" },
   { name: "Lana", passcode: "5555", color: "#7C3AED" },
-  { name: "Mustafa", passcode: "6666", color: "#EA580C" },
-  { name: "Zahara", passcode: "7777", color: "#0891B2" },
+  { name: "Mustafa", passcode: "7777", color: "#EA580C" },
+  { name: "Zahara", passcode: "6666", color: "#0891B2" },
   { name: "Reem", passcode: "8888", color: "#BE185D" },
   { name: "Hala", passcode: "9999", color: "#065F46" },
   { name: "Sham", passcode: "0000", color: "#6B7280" },
+  { name: "Moayad", passcode: "2222", color: "#0EA5E9" },
 ];
 const ADMIN_CODE = "2026";
 
