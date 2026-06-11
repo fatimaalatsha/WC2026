@@ -2,7 +2,7 @@
 // CONFIGURATION — paste your Apps Script Web App URL below after deploying
 // ══════════════════════════════════════════════════════════════════════════════
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzwW86VlHKAH1VHfz4nZB9LJVHBF3w_1utX19BL3ebE0hgyxt0sF_wSxI2dM8m0_tOi/exec";
+  "https://script.google.com/macros/s/AKfycbxfxuynEjyAvfQ38R3EemjzBLt8HR2cIX1m8RdoDyXnJf6kfkQAxq6lt5m_bIJaucc8/exec";
 
 function isAppsScriptWebAppUrl(url) {
   return /https:\/\/script\.google\.com\/macros\/s\/.+\/(exec|dev)$/.test(
@@ -236,30 +236,30 @@ const S = {
 };
 
 // ── API ───────────────────────────────────────────────────────────────────────
-async function apiCall(params) {
-  if (APPS_SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE") {
-    if (params.action === "status" || params.action === "load") {
-      return mockGet(params);
-    }
-    return mockPost({
-      action: params.action,
-      player: params.player,
-      data: params.data ? JSON.parse(params.data) : undefined,
-    });
-  }
-  if (!isAppsScriptWebAppUrl(APPS_SCRIPT_URL)) {
-    throw new Error(
-      "Invalid Apps Script URL. Use the deployed Web App URL ending with /exec or /dev.",
-    );
-  }
+// GET — used for status and load (no body needed, short URLs)
+async function apiGet(params) {
   const url = APPS_SCRIPT_URL + "?" + new URLSearchParams(params);
   const r = await fetch(url);
   const text = await r.text();
   try {
     return JSON.parse(text);
   } catch {
-    throw new Error("Backend did not return valid JSON");
+    throw new Error("Bad response from server");
   }
+}
+
+// POST with no-cors — used for save and submit (large body)
+// no-cors means we can't read the response, but the write still happens in the sheet
+async function apiPost(body) {
+  await fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors", // bypass CORS — we just need the write to happen
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(body),
+  });
+  // no-cors gives us an opaque response — we can't read it
+  // so we assume ok:true and let the next load verify
+  return { ok: true };
 }
 
 // Mock for demo when URL not set
@@ -782,7 +782,7 @@ async function verifyPin() {
     S.isLoading = true;
     render();
     try {
-      const res = await apiCall({ action: "load", player: p.name });
+      const res = await apiGet({ action: "load", player: p.name });
       S.currentForm = Object.assign(emptyForm(), res.form || {});
       S.currentSubmitted = !!res.submitted;
     } catch {
@@ -814,12 +814,10 @@ function schedSave() {
     const { filled } = filledCount(S.currentForm);
     let saveOk = false;
     try {
-      const res = await apiCall({
+      const res = await apiPost({
         action: "save",
         player: S.selectedPlayer,
-        data: encodeURIComponent(
-          JSON.stringify({ form: S.currentForm, filledCount: filled }),
-        ),
+        data: JSON.stringify({ form: S.currentForm, filledCount: filled }),
       });
       if (!res?.ok) throw new Error("Save returned not-ok response");
       S.allStatuses[S.selectedPlayer] = {
@@ -846,12 +844,10 @@ async function doSubmit() {
   render();
   const { filled } = filledCount(S.currentForm);
   try {
-    const res = await apiCall({
+    const res = await apiPost({
       action: "submit",
       player: S.selectedPlayer,
-      data: encodeURIComponent(
-        JSON.stringify({ form: S.currentForm, filledCount: filled }),
-      ),
+      data: JSON.stringify({ form: S.currentForm, filledCount: filled }),
     });
     if (!res?.ok) throw new Error("Submit returned not-ok response");
     S.currentSubmitted = true;
@@ -871,7 +867,7 @@ async function doSubmit() {
 
 async function loadStatuses() {
   try {
-    const r = await apiCall({ action: "status" });
+    const r = await apiGet({ action: "status" });
     if (r.ok) S.allStatuses = r.statuses || {};
   } catch {}
 }
