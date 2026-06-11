@@ -2,7 +2,13 @@
 // CONFIGURATION — paste your Apps Script Web App URL below after deploying
 // ══════════════════════════════════════════════════════════════════════════════
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxhybDbVX5ZfGm0uMH04BWqTQiJ5ARqz7QCkNBbSJdus7BEruaZAJB3rv-aUx6Qoub0/exec";
+  "https://script.google.com/macros/s/AKfycbzwW86VlHKAH1VHfz4nZB9LJVHBF3w_1utX19BL3ebE0hgyxt0sF_wSxI2dM8m0_tOi/exec";
+
+function isAppsScriptWebAppUrl(url) {
+  return /https:\/\/script\.google\.com\/macros\/s\/.+\/(exec|dev)$/.test(
+    (url || "").trim(),
+  );
+}
 
 // ── PLAYERS ───────────────────────────────────────────────────────────────────
 const PLAYERS = [
@@ -230,20 +236,30 @@ const S = {
 };
 
 // ── API ───────────────────────────────────────────────────────────────────────
-async function apiGet(params) {
-  if (APPS_SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE") return mockGet(params);
+async function apiCall(params) {
+  if (APPS_SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE") {
+    if (params.action === "status" || params.action === "load") {
+      return mockGet(params);
+    }
+    return mockPost({
+      action: params.action,
+      player: params.player,
+      data: params.data ? JSON.parse(params.data) : undefined,
+    });
+  }
+  if (!isAppsScriptWebAppUrl(APPS_SCRIPT_URL)) {
+    throw new Error(
+      "Invalid Apps Script URL. Use the deployed Web App URL ending with /exec or /dev.",
+    );
+  }
   const url = APPS_SCRIPT_URL + "?" + new URLSearchParams(params);
   const r = await fetch(url);
-  return r.json();
-}
-async function apiPost(body) {
-  if (APPS_SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE") return mockPost(body);
-  const r = await fetch(APPS_SCRIPT_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  return r.json();
+  const text = await r.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error("Backend did not return valid JSON");
+  }
 }
 
 // Mock for demo when URL not set
@@ -659,7 +675,7 @@ function renderLeaderboard() {
 
 // ── EVENTS ────────────────────────────────────────────────────────────────────
 function attach() {
-  document.getElementById("root").addEventListener("click", onClick);
+  document.getElementById("root").onclick = onClick;
   document.querySelectorAll(".pin-digit").forEach((el) => {
     el.addEventListener("input", onPin);
     el.addEventListener("keydown", onPinKey);
@@ -766,7 +782,7 @@ async function verifyPin() {
     S.isLoading = true;
     render();
     try {
-      const res = await apiGet({ action: "load", player: p.name });
+      const res = await apiCall({ action: "load", player: p.name });
       S.currentForm = Object.assign(emptyForm(), res.form || {});
       S.currentSubmitted = !!res.submitted;
     } catch {
@@ -796,22 +812,27 @@ function schedSave() {
   }
   saveTimer = setTimeout(async () => {
     const { filled } = filledCount(S.currentForm);
+    let saveOk = false;
     try {
-      await apiPost({
+      const res = await apiCall({
         action: "save",
         player: S.selectedPlayer,
-        data: { form: S.currentForm, filledCount: filled },
+        data: encodeURIComponent(
+          JSON.stringify({ form: S.currentForm, filledCount: filled }),
+        ),
       });
+      if (!res?.ok) throw new Error("Save returned not-ok response");
       S.allStatuses[S.selectedPlayer] = {
         ...S.allStatuses[S.selectedPlayer],
         filledCount: filled,
       };
+      saveOk = true;
     } catch {
       toast("⚠ Save failed — check connection");
     }
     S.isSaving = false;
     const dot = document.querySelector(".saving-dot");
-    if (dot) {
+    if (dot && saveOk) {
       dot.parentElement.innerHTML = "Saved ✓";
       dot.parentElement.style.background = "var(--green-light)";
       dot.parentElement.style.color = "var(--green)";
@@ -825,11 +846,14 @@ async function doSubmit() {
   render();
   const { filled } = filledCount(S.currentForm);
   try {
-    const res = await apiPost({
+    const res = await apiCall({
       action: "submit",
       player: S.selectedPlayer,
-      data: { form: S.currentForm, filledCount: filled },
+      data: encodeURIComponent(
+        JSON.stringify({ form: S.currentForm, filledCount: filled }),
+      ),
     });
+    if (!res?.ok) throw new Error("Submit returned not-ok response");
     S.currentSubmitted = true;
     S.allStatuses[S.selectedPlayer] = {
       submitted: true,
@@ -847,7 +871,7 @@ async function doSubmit() {
 
 async function loadStatuses() {
   try {
-    const r = await apiGet({ action: "status" });
+    const r = await apiCall({ action: "status" });
     if (r.ok) S.allStatuses = r.statuses || {};
   } catch {}
 }
