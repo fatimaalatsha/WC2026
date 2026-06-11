@@ -21,7 +21,7 @@ const PLAYERS = [
   { name: "Zahara", passcode: "7777", color: "#0891B2" },
   { name: "Reem", passcode: "8888", color: "#BE185D" },
   { name: "Hala", passcode: "9999", color: "#065F46" },
-  { name: "Player 10", passcode: "0000", color: "#6B7280" },
+  { name: "Sham", passcode: "0000", color: "#6B7280" },
 ];
 const ADMIN_CODE = "2026";
 
@@ -239,11 +239,17 @@ const S = {
 // GET — used for status and load (no body needed, short URLs)
 async function apiGet(params) {
   const url = APPS_SCRIPT_URL + "?" + new URLSearchParams(params);
+  console.log("[API GET] Sending params:", params);
+  console.log("[API GET] URL:", url);
   const r = await fetch(url);
   const text = await r.text();
+  console.log("[API GET] Raw response text:", text);
   try {
-    return JSON.parse(text);
+    const json = JSON.parse(text);
+    console.log("[API GET] Parsed response:", json);
+    return json;
   } catch {
+    console.error("[API GET] Failed to parse JSON response", { text });
     throw new Error("Bad response from server");
   }
 }
@@ -251,6 +257,15 @@ async function apiGet(params) {
 // POST with no-cors — used for save and submit (large body)
 // no-cors means we can't read the response, but the write still happens in the sheet
 async function apiPost(body) {
+  console.log("[API POST] Sending body:", body);
+  if (typeof body?.data === "string") {
+    try {
+      console.log("[API POST] Parsed body.data:", JSON.parse(body.data));
+    } catch {
+      console.log("[API POST] body.data is not JSON:", body.data);
+    }
+  }
+
   await fetch(APPS_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors", // bypass CORS — we just need the write to happen
@@ -259,7 +274,9 @@ async function apiPost(body) {
   });
   // no-cors gives us an opaque response — we can't read it
   // so we assume ok:true and let the next load verify
-  return { ok: true };
+  const assumed = { ok: true, note: "no-cors opaque response" };
+  console.log("[API POST] Received (assumed):", assumed);
+  return assumed;
 }
 
 // Mock for demo when URL not set
@@ -813,12 +830,19 @@ function schedSave() {
   saveTimer = setTimeout(async () => {
     const { filled } = filledCount(S.currentForm);
     let saveOk = false;
+    const savePayload = {
+      action: "save",
+      player: S.selectedPlayer,
+      data: JSON.stringify({ form: S.currentForm, filledCount: filled }),
+    };
+
+    // Debug helper: inspect this in browser console when testing saves.
+    window.__lastSavePayload = savePayload;
+    console.log("[SAVE] Sending payload:", savePayload);
+    console.log("[SAVE] Parsed data:", JSON.parse(savePayload.data));
+
     try {
-      const res = await apiPost({
-        action: "save",
-        player: S.selectedPlayer,
-        data: JSON.stringify({ form: S.currentForm, filledCount: filled }),
-      });
+      const res = await apiPost(savePayload);
       if (!res?.ok) throw new Error("Save returned not-ok response");
       S.allStatuses[S.selectedPlayer] = {
         ...S.allStatuses[S.selectedPlayer],
