@@ -2,7 +2,7 @@
 // CONFIGURATION — paste your Apps Script Web App URL below after deploying
 // ══════════════════════════════════════════════════════════════════════════════
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxuJ2qsSWOVNE0k-ZbVU6K2-oIWn5BPYiga9syhXsZugzpmcdUyIXfWc4-YdOavOC0/exec";
+  "https://script.google.com/macros/s/AKfycbzOH2scGaKIH36MkpIaxjeLpcrVaM8vbPnHRLxLFQJf-FK5IQqsk4h0SFZ8Ne8pr72f/exec";
 
 function isAppsScriptWebAppUrl(url) {
   return /https:\/\/script\.google\.com\/macros\/s\/.+\/(exec|dev)$/.test(
