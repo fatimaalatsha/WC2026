@@ -35,7 +35,7 @@ const GROUPS = {
   C: ["Brazil", "Morocco", "Haiti", "Scotland"],
   D: ["United States", "Australia", "Paraguay", "Türkiye"],
   E: ["Germany", "Ivory Coast", "Ecuador", "Curaçao"],
-  F: ["Netherlands", "Japan", "Tunisia"],
+  F: ["Netherlands", "Japan", "Tunisia", "Sweden"],
   G: ["Belgium", "Iran", "New Zealand", "Egypt"],
   H: ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
   I: ["France", "Norway", "Senegal", "Iraq"],
@@ -88,10 +88,10 @@ const GS_RAW = {
   ],
   F: [
     [11, "Jun 14", "Netherlands", "Japan"],
-    [12, "Jun 14", "Japan", "Tunisia"],
-    [35, "Jun 20", "Netherlands", "Japan"],
+    [12, "Jun 14", "Sweden", "Tunisia"],
+    [35, "Jun 20", "Netherlands", "Sweden"],
     [36, "Jun 20", "Tunisia", "Japan"],
-    [57, "Jun 25", "Japan", "Japan"],
+    [57, "Jun 25", "Japan", "Sweden"],
     [58, "Jun 25", "Tunisia", "Netherlands"],
   ],
   G: [
