@@ -4,7 +4,7 @@
 const APPS_SCRIPT_URL =
   //   "https://script.google.com/macros/s/AKfycbzAaidQgeK1HKKpiedHavf5prDDHh3xcKbu26L775ecYpA-Xw5E2UBlaZq9Uqg_RQ-T/exec";
 
-  "https://script.google.com/macros/s/AKfycbwoTsp2mIawWIHT_XyPUVEiCuA6S4vZ17mNozBbMo0-T_t04CW1kTfK4Gpwf5MyTwDHyA/exec";
+  "https://script.google.com/macros/s/AKfycbwl-8iuJ4Efop0Eg1gmqmrz9Ds5w8SeEZEAulfsLCi_/dev";
 
 function isAppsScriptWebAppUrl(url) {
   return /https:\/\/script\.google\.com\/macros\/s\/.+\/(exec|dev)$/.test(
@@ -433,7 +433,7 @@ function renderPasscode() {
 function renderPlayer() {
   const pName = S.selectedPlayer;
   const p = PLAYERS.find((x) => x.name === pName);
-  const locked = S.currentSubmitted;
+  const locked = false;
   const form = S.currentForm;
   const { filled, total } = filledCount(form);
   const pct = Math.round((filled / total) * 100);
@@ -443,24 +443,12 @@ function renderPlayer() {
   else if (S.activeTab === "gs") tabHtml = renderGS(form, locked);
   else if (S.activeTab === "ko") tabHtml = renderKO(form, locked);
   else if (S.activeTab === "side") tabHtml = renderSide(form, locked);
-  const modal = S.showConfirm
-    ? `<div class="confirm-overlay">
-    <div class="confirm-card">
-      <div style="font-size:2.2rem;margin-bottom:.65rem">🔒</div>
-      <h3>Lock in your predictions?</h3>
-      <p>Once submitted, your picks are <strong>permanent and cannot be changed</strong>. Double-check everything first!</p>
-      <div class="confirm-btns">
-        <button class="btn btn-ghost" data-action="cancel-confirm">Go back</button>
-        <button class="btn btn-danger" data-action="do-submit">${S.isSaving ? `<span class="spinner"></span>` : ""}Yes, lock them!</button>
-      </div>
-    </div></div>`
-    : "";
-  return `${modal}
+  return `
   <div style="width:100%;max-width:880px">
     <div class="top-nav">
       <button class="back-btn" data-action="back">← Exit</button>
       <div class="nav-title">⚽ ${pName}'s Card</div>
-      <div style="min-width:70px;text-align:right">${locked ? `<span class="tag tag-green">🔒 Locked</span>` : S.isSaving ? `<span class="tag tag-gold"><span class="saving-dot"></span>Saving</span>` : ""}</div>
+      <div style="min-width:70px;text-align:right">${S.isSaving ? `<span class="tag tag-gold"><span class="saving-dot"></span>Saving</span>` : ""}</div>
     </div>
     <div class="card card-full">
       <div class="player-header">
@@ -468,18 +456,14 @@ function renderPlayer() {
         <h2>${pName}'s Prediction Card</h2>
         <p>World Cup 2026 — Complete all 5 sections before the tournament starts</p>
       </div>
-      ${
-        locked
-          ? `<div class="locked-banner"><div class="lb-icon">🔒</div><div><h3>Predictions Locked!</h3><p>Submitted and saved to Google Sheets. Good luck!</p></div></div>`
-          : `
+      ${S.currentSubmitted ? `<div class="locked-banner" style="background:linear-gradient(135deg,var(--blue),#0a3d7a)"><div class="lb-icon">✅</div><div><h3>Previously Saved</h3><p>Your predictions are saved — you can keep editing until the tournament starts.</p></div></div>` : ""}
       <div style="margin-bottom:1.25rem">
         <div class="flex-between" style="margin-bottom:.3rem">
           <span class="text-muted" style="font-size:.77rem">Completion</span>
           <span style="font-weight:700;font-size:.82rem;color:var(--blue)">${filled} / ${total} filled</span>
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-      </div>`
-      }
+      </div>
       <div class="tabs">
         ${[
           ["tourney", "🏆 Tournament"],
@@ -495,15 +479,11 @@ function renderPlayer() {
           .join("")}
       </div>
       ${tabHtml}
-      ${
-        !locked
-          ? `<div class="divider"></div>
+      <div class="divider"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.65rem">
         <div class="text-muted" style="font-size:.78rem">💾 Auto-saves as you type</div>
-        <button class="btn btn-gold" data-action="req-submit">🔒 Submit & Lock Predictions</button>
-      </div>`
-          : ""
-      }
+        <button class="btn btn-gold" data-action="do-submit">${S.isSaving ? `<span class="spinner"></span>` : ""}💾 Save Predictions</button>
+      </div>
     </div>
   </div>`;
 }
@@ -740,12 +720,6 @@ function onClick(e) {
   else if (a === "tab") {
     S.activeTab = btn.dataset.tab;
     render();
-  } else if (a === "req-submit") {
-    S.showConfirm = true;
-    render();
-  } else if (a === "cancel-confirm") {
-    S.showConfirm = false;
-    render();
   } else if (a === "do-submit") doSubmit();
   else if (a === "reload-status") loadStatuses().then(render);
 }
@@ -768,7 +742,7 @@ function onPinKey(e) {
 
 function onField(e) {
   const id = e.target.id;
-  if (!id || S.currentSubmitted) return;
+  if (!id) return;
   const v = e.target.value;
   const f = S.currentForm;
   if (id.startsWith("tc_")) f[id.slice(3)] = v;
@@ -893,7 +867,7 @@ async function doSubmit() {
       submittedAt: nowIso,
       filledCount: filled,
     };
-    toast("🔒 Predictions locked and saved to Google Sheets!");
+    toast("💾 Predictions saved to Google Sheets!");
   } catch {
     toast("⚠ Submission failed — please try again");
   }
