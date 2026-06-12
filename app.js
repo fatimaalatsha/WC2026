@@ -28,7 +28,7 @@ const PLAYERS = [
 ];
 const ADMIN_CODE = "2026";
 
-// ── MATCH / GROUP DATA ────────────────────────────────────────────────────────
+// ── MATCH / GROUP DATA 
 const GROUPS = {
   A: ["Mexico", "South Korea", "Czechia", "South Africa"],
   B: ["Canada", "Qatar", "Switzerland", "Bosnia and Herzegovina"],
