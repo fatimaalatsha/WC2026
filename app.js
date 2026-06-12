@@ -4,7 +4,7 @@
 const APPS_SCRIPT_URL =
   //   "https://script.google.com/macros/s/AKfycbzAaidQgeK1HKKpiedHavf5prDDHh3xcKbu26L775ecYpA-Xw5E2UBlaZq9Uqg_RQ-T/exec";
 
-  "https://script.google.com/macros/s/AKfycbwl-8iuJ4Efop0Eg1gmqmrz9Ds5w8SeEZEAulfsLCi_/dev";
+  "https://script.google.com/macros/s/AKfycbwQEeC0G6Rtc8fJ4XhhQJoSEjFdTEHnM6N5DnEYz3-SHNo7aXE_N6bFD5Rbv0eJMWmrzg/exec";
 
 function isAppsScriptWebAppUrl(url) {
   return /https:\/\/script\.google\.com\/macros\/s\/.+\/(exec|dev)$/.test(
