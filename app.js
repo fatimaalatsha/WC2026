@@ -12,6 +12,201 @@ function isAppsScriptWebAppUrl(url) {
   );
 }
 
+// ── TRANSLATIONS ─────────────────────────────────────────────────────────────
+const LANG = {
+  en: {
+    langToggle: "عربي",
+    siteTitle: "World Cup 2026<br>Prediction League",
+    siteSubtitle: "Select your name · Enter your passcode · Submit your picks",
+    chooseName: "Choose your name",
+    thenPasscode: "Then enter your passcode",
+    adminBtn: "Admin",
+    viewLeaderboard: "📊 View Leaderboard",
+    lockedLabel: "🔒 Locked",
+    back: "← Back",
+    enterAdminCode: "Enter the admin passcode",
+    enterPasscode: "Enter your 4-digit passcode",
+    unlock: "Unlock →",
+    wrongPasscode: "Wrong passcode — try again",
+    wrongAdmin: "Wrong admin passcode",
+    exit: "← Exit",
+    savingLabel: "Saving",
+    predCard: (n) => `${n}'s Prediction Card`,
+    predNavTitle: (n) => `⚽ ${n}'s Card`,
+    predSubtitle: "World Cup 2026 — Complete all 5 sections before the tournament starts",
+    prevSavedTitle: "Previously Saved",
+    prevSavedDesc: "Your predictions are saved — you can keep editing until the tournament starts.",
+    completion: "Completion",
+    filledWord: "filled",
+    tabTourney: "🏆 Tournament",
+    tabGroups: "📋 Groups",
+    tabGS: "⚽ Group Matches",
+    tabKO: "🏅 Knockouts",
+    tabSide: "🎲 Side Bets",
+    autoSaves: "💾 Auto-saves as you type",
+    savePredictions: "💾 Save Predictions",
+    tourneyTitle: "🏆 Tournament Predictions",
+    tourneyBadge: "up to 230 pts",
+    groupsTitle: "📋 Group Predictions",
+    groupsBadge: "up to 360 pts",
+    groupsHint: "Full order=30pts · Top 2 any order=15pts · Winner only=10pts · Runner-up only=10pts",
+    groupPositions: ["1st", "2nd", "3rd", "4th"],
+    groupLabel: (g) => `Group ${g}`,
+    selectPH: "— select —",
+    winnerPH: "— Winner —",
+    gsTitle: "⚽ Group Stage Matches",
+    gsBadge: "72 matches",
+    gsHint: "Correct winner=5pts · Winner+score=10pts · Exact score bonus=+5pts",
+    scoreA: "A score",
+    scoreB: "B score",
+    koTitle: "🏅 Knockout Predictions",
+    koBadge: "32 matches",
+    koHint: "Advancing=5pts · Winner+score=10pts · Penalties winner=8pts · Exact score +5 bonus",
+    koStages: { "Round of 32": "Round of 32", "Round of 16": "Round of 16", "Quarter-Final": "Quarter-Final", "Semi-Final": "Semi-Final", "3rd Place": "3rd Place", "Final": "Final" },
+    sideTitle: "🎲 Fun Side Bets",
+    sideBadge: "up to 75 pts",
+    sideAnswerPH: "Your answer...",
+    adminTitle: "👑 Admin Dashboard",
+    adminStatusHeading: "Player Submission Status",
+    submittedLbl: "Submitted",
+    pendingLbl: "Pending",
+    totalLbl: "Total",
+    adminNote: "All data is saved to your Google Sheet. Check the <strong>PredictionsMeta</strong> tab for an overview, and <strong>Data_PlayerName</strong> tabs for raw data.",
+    refreshStatus: "↻ Refresh Status",
+    lockedStatus: "✅ Locked",
+    pendingStatus: "⏳ Pending",
+    fieldsSaved: (n) => `${n} fields saved`,
+    hiLabel: (n) => `Hi, ${n}`,
+    lbNavTitle: "📊 Leaderboard",
+    lbHeading: "WC 2026 Standings",
+    lbSubtitle: "Points calculated in the Excel workbook after results are entered",
+    lbFooter: "Open the Excel workbook to see live scores once matches are played",
+    lbSubmitted: "Submitted",
+    lbPending: "Pending",
+    ptsLabel: "— pts",
+    ptsSuffix: "pts",
+    savedToast: "💾 Predictions saved to Google Sheets!",
+    saveFailToast: "⚠ Save failed — check connection",
+    submitFailToast: "⚠ Submission failed — please try again",
+    savingInline: "Saving",
+    savedInline: "Saved ✓",
+    tourneyLabels: {
+      winner: "World Cup Winner", runnerup: "Runner-Up",
+      finalist1: "Finalist 1", finalist2: "Finalist 2",
+      semi1: "Semi-Finalist 1", semi2: "Semi-Finalist 2",
+      semi3: "Semi-Finalist 3", semi4: "Semi-Finalist 4",
+      qf1: "QF 1", qf2: "QF 2", qf3: "QF 3", qf4: "QF 4",
+      qf5: "QF 5", qf6: "QF 6", qf7: "QF 7", qf8: "QF 8",
+      goldenboot: "Golden Boot", bestyoung: "Best Young Player",
+      goldenglove: "Golden Glove", mostgoals: "Team Most Goals",
+    },
+    sideLabels: {
+      upset: "Biggest Upset", yellows: "Most Yellow Cards (team)",
+      redcard: "First Red Card (team)", hattrick: "First Hat-Trick Scorer",
+      owngoal: "First Own Goal (team)", highscore: "Highest Scoring Match",
+    },
+  },
+  ar: {
+    langToggle: "English",
+    siteTitle: "كأس العالم 2026<br>دوري التوقعات",
+    siteSubtitle: "اختر اسمك · أدخل رمزك · أرسل توقعاتك",
+    chooseName: "اختر اسمك",
+    thenPasscode: "ثم أدخل رمزك السري",
+    adminBtn: "المشرف",
+    viewLeaderboard: "📊 عرض الترتيب",
+    lockedLabel: "🔒 مُقفَل",
+    back: "رجوع →",
+    enterAdminCode: "أدخل رمز المشرف",
+    enterPasscode: "أدخل رمزك السري المكون من 4 أرقام",
+    unlock: "← فتح",
+    wrongPasscode: "رمز خاطئ — حاول مرة أخرى",
+    wrongAdmin: "رمز المشرف خاطئ",
+    exit: "خروج →",
+    savingLabel: "جاري الحفظ",
+    predCard: (n) => `بطاقة ${n}`,
+    predNavTitle: (n) => `⚽ بطاقة ${n}`,
+    predSubtitle: "كأس العالم 2026 — أكمل الأقسام الخمسة قبل بداية البطولة",
+    prevSavedTitle: "تم الحفظ مسبقاً",
+    prevSavedDesc: "توقعاتك محفوظة — يمكنك الاستمرار في التعديل حتى بداية البطولة.",
+    completion: "الإكمال",
+    filledWord: "مكتمل",
+    tabTourney: "🏆 البطولة",
+    tabGroups: "📋 المجموعات",
+    tabGS: "⚽ مباريات المجموعات",
+    tabKO: "🏅 الإقصائيات",
+    tabSide: "🎲 رهانات إضافية",
+    autoSaves: "💾 يحفظ تلقائياً",
+    savePredictions: "💾 حفظ التوقعات",
+    tourneyTitle: "🏆 توقعات البطولة",
+    tourneyBadge: "حتى 230 نقطة",
+    groupsTitle: "📋 توقعات المجموعات",
+    groupsBadge: "حتى 360 نقطة",
+    groupsHint: "الترتيب الكامل=30 · أفضل 2 بأي ترتيب=15 · الأول فقط=10 · الثاني فقط=10",
+    groupPositions: ["الأول", "الثاني", "الثالث", "الرابع"],
+    groupLabel: (g) => `المجموعة ${g}`,
+    selectPH: "— اختر —",
+    winnerPH: "— الفائز —",
+    gsTitle: "⚽ مباريات دور المجموعات",
+    gsBadge: "72 مباراة",
+    gsHint: "الفائز الصحيح=5 نقاط · الفائز والنتيجة=10 · مكافأة النتيجة الدقيقة=+5",
+    scoreA: "نتيجة أ",
+    scoreB: "نتيجة ب",
+    koTitle: "🏅 توقعات الإقصائيات",
+    koBadge: "32 مباراة",
+    koHint: "التأهل=5 نقاط · الفائز والنتيجة=10 · ركلات الترجيح=8 · النتيجة الدقيقة +5 مكافأة",
+    koStages: { "Round of 32": "دور الـ32", "Round of 16": "دور الـ16", "Quarter-Final": "ربع النهائي", "Semi-Final": "نصف النهائي", "3rd Place": "المركز الثالث", "Final": "النهائي" },
+    sideTitle: "🎲 رهانات ترفيهية",
+    sideBadge: "حتى 75 نقطة",
+    sideAnswerPH: "إجابتك...",
+    adminTitle: "👑 لوحة المشرف",
+    adminStatusHeading: "حالة تقديم المشتركين",
+    submittedLbl: "المُقدِّمون",
+    pendingLbl: "في الانتظار",
+    totalLbl: "الإجمالي",
+    adminNote: "جميع البيانات محفوظة في Google Sheets. تحقق من تبويب <strong>PredictionsMeta</strong> للنظرة العامة، وتبويبات <strong>Data_PlayerName</strong> للبيانات الخام.",
+    refreshStatus: "↺ تحديث الحالة",
+    lockedStatus: "✅ مُقفَل",
+    pendingStatus: "⏳ في الانتظار",
+    fieldsSaved: (n) => `${n} حقل محفوظ`,
+    hiLabel: (n) => `مرحباً، ${n}`,
+    lbNavTitle: "📊 الترتيب",
+    lbHeading: "ترتيب كأس العالم 2026",
+    lbSubtitle: "يتم احتساب النقاط في ملف Excel بعد إدخال النتائج",
+    lbFooter: "افتح ملف Excel لمشاهدة النتائج المباشرة بعد انتهاء المباريات",
+    lbSubmitted: "تم التقديم",
+    lbPending: "في الانتظار",
+    ptsLabel: "— نقطة",
+    ptsSuffix: "نقطة",
+    savedToast: "💾 تم حفظ التوقعات في Google Sheets!",
+    saveFailToast: "⚠ فشل الحفظ — تحقق من اتصال الإنترنت",
+    submitFailToast: "⚠ فشل الحفظ — يرجى المحاولة مرة أخرى",
+    savingInline: "جاري الحفظ",
+    savedInline: "تم الحفظ ✓",
+    tourneyLabels: {
+      winner: "الفائز بكأس العالم", runnerup: "الوصيف",
+      finalist1: "المتأهل للنهائي 1", finalist2: "المتأهل للنهائي 2",
+      semi1: "نصف نهائي 1", semi2: "نصف نهائي 2",
+      semi3: "نصف نهائي 3", semi4: "نصف نهائي 4",
+      qf1: "ربع النهائي 1", qf2: "ربع النهائي 2",
+      qf3: "ربع النهائي 3", qf4: "ربع النهائي 4",
+      qf5: "ربع النهائي 5", qf6: "ربع النهائي 6",
+      qf7: "ربع النهائي 7", qf8: "ربع النهائي 8",
+      goldenboot: "الحذاء الذهبي", bestyoung: "أفضل لاعب شاب",
+      goldenglove: "القفاز الذهبي", mostgoals: "الفريق الأكثر تسجيلاً",
+    },
+    sideLabels: {
+      upset: "أكبر مفاجأة", yellows: "أكثر فريق يتلقى بطاقات صفراء",
+      redcard: "أول بطاقة حمراء (فريق)", hattrick: "أول هاتريك (لاعب)",
+      owngoal: "أول هدف في المرمى الخاطئ (فريق)", highscore: "المباراة الأعلى تسجيلاً",
+    },
+  },
+};
+
+function t(key, ...args) {
+  const val = LANG[S.lang]?.[key] ?? LANG.en[key] ?? key;
+  return typeof val === "function" ? val(...args) : val;
+}
+
 // ── PLAYERS ───────────────────────────────────────────────────────────────────
 const PLAYERS = [
   { name: "Fatima", passcode: "1111", color: "#E63946" },
@@ -225,6 +420,7 @@ const SIDE_BETS = [
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 const S = {
+  lang: "en",
   view: "login",
   selectedPlayer: null,
   activeTab: "tourney",
@@ -352,7 +548,8 @@ function filledCount(form) {
     total: keys.length,
   };
 }
-function sel(id, val, dis, teams, ph = "— select —") {
+function sel(id, val, dis, teams, ph) {
+  if (ph === undefined) ph = t("selectPH");
   const o =
     `<option value="">${ph}</option>` +
     (teams || ALL_TEAMS)
@@ -372,6 +569,12 @@ function toast(msg, ms = 2800) {
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function render() {
+  document.documentElement.dir = S.lang === "ar" ? "rtl" : "ltr";
+  document.documentElement.lang = S.lang;
+  document.querySelector(".site-header h1").innerHTML = t("siteTitle");
+  document.querySelector(".site-header p").textContent = t("siteSubtitle");
+  const langBtn = document.getElementById("lang-btn");
+  if (langBtn) langBtn.textContent = t("langToggle");
   const root = document.getElementById("root");
   if (S.view === "login") root.innerHTML = renderLogin();
   else if (S.view === "passcode") root.innerHTML = renderPasscode();
@@ -391,18 +594,18 @@ function renderLogin() {
     return `<button class="player-btn${done ? " submitted" : ""}" data-action="pick" data-name="${p.name}">
       <div class="avatar" style="background:${p.color}">${ini(p.name)}</div>
       <div>${p.name}</div>
-      ${done ? `<div class="sub-tag">🔒 Locked</div>` : ``}
+      ${done ? `<div class="sub-tag">${t("lockedLabel")}</div>` : ``}
     </button>`;
   }).join("");
   return `<div class="card">
     <div class="flex-between" style="margin-bottom:1rem">
-      <div><div style="font-size:1.1rem;font-weight:700;color:var(--navy)">Choose your name</div>
-      <div class="text-muted" style="margin-top:.2rem;font-size:.8rem">Then enter your passcode</div></div>
-      <button class="btn btn-ghost btn-sm" data-action="go-admin">Admin</button>
+      <div><div style="font-size:1.1rem;font-weight:700;color:var(--navy)">${t("chooseName")}</div>
+      <div class="text-muted" style="margin-top:.2rem;font-size:.8rem">${t("thenPasscode")}</div></div>
+      <button class="btn btn-ghost btn-sm" data-action="go-admin">${t("adminBtn")}</button>
     </div>
     <div class="player-grid">${btns}</div>
     <div class="divider"></div>
-    <button class="btn btn-ghost btn-full" data-action="go-lb">📊 View Leaderboard</button>
+    <button class="btn btn-ghost btn-full" data-action="go-lb">${t("viewLeaderboard")}</button>
   </div>`;
 }
 
@@ -411,7 +614,7 @@ function renderPasscode() {
   const isAdmin = S.selectedPlayer === "__admin__";
   const p = PLAYERS.find((x) => x.name === S.selectedPlayer);
   const color = isAdmin ? "#374151" : p?.color || "#1A56B0";
-  const label = isAdmin ? "Admin" : S.selectedPlayer || "";
+  const label = isAdmin ? t("adminBtn") : S.selectedPlayer || "";
   const digits = S.pinInput
     .map(
       (v, i) =>
@@ -419,13 +622,13 @@ function renderPasscode() {
     )
     .join("");
   return `<div class="card passcode-form">
-    <button class="btn btn-ghost btn-sm" data-action="back" style="margin-bottom:1rem">← Back</button>
-    <div class="pav" style="background:${color}">${isAdmin ? "★" : ini(label)}</div>
-    <h2>Hi, ${label}</h2>
-    <p>${isAdmin ? "Enter the admin passcode" : "Enter your 4-digit passcode"}</p>
+    <button class="btn btn-ghost btn-sm" data-action="back" style="margin-bottom:1rem">${t("back")}</button>
+    <div class="pav" style="background:${color}">${isAdmin ? "★" : ini(S.selectedPlayer || "")}</div>
+    <h2>${t("hiLabel", label)}</h2>
+    <p>${isAdmin ? t("enterAdminCode") : t("enterPasscode")}</p>
     ${S.pinError ? `<div class="error-msg">⚠ ${S.pinError}</div>` : ""}
     <div class="pin-row">${digits}</div>
-    <button class="btn btn-primary btn-full" data-action="verify">Unlock →</button>
+    <button class="btn btn-primary btn-full" data-action="verify">${t("unlock")}</button>
   </div>`;
 }
 
@@ -446,31 +649,31 @@ function renderPlayer() {
   return `
   <div style="width:100%;max-width:880px">
     <div class="top-nav">
-      <button class="back-btn" data-action="back">← Exit</button>
-      <div class="nav-title">⚽ ${pName}'s Card</div>
-      <div style="min-width:70px;text-align:right">${S.isSaving ? `<span class="tag tag-gold"><span class="saving-dot"></span>Saving</span>` : ""}</div>
+      <button class="back-btn" data-action="back">${t("exit")}</button>
+      <div class="nav-title">${t("predNavTitle", pName)}</div>
+      <div style="min-width:70px;text-align:right">${S.isSaving ? `<span class="tag tag-gold"><span class="saving-dot"></span>${t("savingLabel")}</span>` : ""}</div>
     </div>
     <div class="card card-full">
       <div class="player-header">
         <div class="pav" style="background:${p?.color}">${ini(pName)}</div>
-        <h2>${pName}'s Prediction Card</h2>
-        <p>World Cup 2026 — Complete all 5 sections before the tournament starts</p>
+        <h2>${t("predCard", pName)}</h2>
+        <p>${t("predSubtitle")}</p>
       </div>
-      ${S.currentSubmitted ? `<div class="locked-banner" style="background:linear-gradient(135deg,var(--blue),#0a3d7a)"><div class="lb-icon">✅</div><div><h3>Previously Saved</h3><p>Your predictions are saved — you can keep editing until the tournament starts.</p></div></div>` : ""}
+      ${S.currentSubmitted ? `<div class="locked-banner" style="background:linear-gradient(135deg,var(--blue),#0a3d7a)"><div class="lb-icon">✅</div><div><h3>${t("prevSavedTitle")}</h3><p>${t("prevSavedDesc")}</p></div></div>` : ""}
       <div style="margin-bottom:1.25rem">
         <div class="flex-between" style="margin-bottom:.3rem">
-          <span class="text-muted" style="font-size:.77rem">Completion</span>
-          <span style="font-weight:700;font-size:.82rem;color:var(--blue)">${filled} / ${total} filled</span>
+          <span class="text-muted" style="font-size:.77rem">${t("completion")}</span>
+          <span style="font-weight:700;font-size:.82rem;color:var(--blue)">${filled} / ${total} ${t("filledWord")}</span>
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       </div>
       <div class="tabs">
         ${[
-          ["tourney", "🏆 Tournament"],
-          ["groups", "📋 Groups"],
-          ["gs", "⚽ Group Matches"],
-          ["ko", "🏅 Knockouts"],
-          ["side", "🎲 Side Bets"],
+          ["tourney", t("tabTourney")],
+          ["groups", t("tabGroups")],
+          ["gs", t("tabGS")],
+          ["ko", t("tabKO")],
+          ["side", t("tabSide")],
         ]
           .map(
             ([k, l]) =>
@@ -481,8 +684,8 @@ function renderPlayer() {
       ${tabHtml}
       <div class="divider"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.65rem">
-        <div class="text-muted" style="font-size:.78rem">💾 Auto-saves as you type</div>
-        <button class="btn btn-gold" data-action="do-submit">${S.isSaving ? `<span class="spinner"></span>` : ""}💾 Save Predictions</button>
+        <div class="text-muted" style="font-size:.78rem">${t("autoSaves")}</div>
+        <button class="btn btn-gold" data-action="do-submit">${S.isSaving ? `<span class="spinner"></span>` : ""}${t("savePredictions")}</button>
       </div>
     </div>
   </div>`;
@@ -490,11 +693,11 @@ function renderPlayer() {
 
 function renderTourney(form, locked) {
   return `<div class="section">
-    <div class="section-title">🏆 Tournament Predictions <span class="badge">up to 230 pts</span></div>
+    <div class="section-title">${t("tourneyTitle")} <span class="badge">${t("tourneyBadge")}</span></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.7rem">
     ${TOURNEY_CATS.map(
       (c) => `<div class="field">
-      <label>${c.label} <span class="pts">+${c.pts}pts</span></label>
+      <label>${t("tourneyLabels")[c.key] || c.label} <span class="pts">+${c.pts} ${t("ptsSuffix")}</span></label>
       ${sel(`tc_${c.key}`, form[c.key], locked)}
     </div>`,
     ).join("")}
@@ -503,15 +706,15 @@ function renderTourney(form, locked) {
 
 function renderGroups(form, locked) {
   return `<div class="section">
-    <div class="section-title">📋 Group Predictions <span class="badge">up to 360 pts</span></div>
-    <p class="text-muted" style="margin-bottom:.85rem;font-size:.78rem">Full order=30pts · Top 2 any order=15pts · Winner only=10pts · Runner-up only=10pts</p>
+    <div class="section-title">${t("groupsTitle")} <span class="badge">${t("groupsBadge")}</span></div>
+    <p class="text-muted" style="margin-bottom:.85rem;font-size:.78rem">${t("groupsHint")}</p>
     <div class="groups-grid">
     ${Object.entries(GROUPS)
       .map(
         ([g, teams]) => `<div class="group-card">
-      <div class="group-title">Group ${g} <span>${teams.join(" · ")}</span></div>
+      <div class="group-title">${t("groupLabel", g)} <span>${teams.join(" · ")}</span></div>
       <div class="group-body">
-        ${["1st", "2nd", "3rd", "4th"]
+        ${t("groupPositions")
           .map(
             (pos, i) => `<div class="group-row">
           <span>${pos}</span>
@@ -532,13 +735,13 @@ function renderGS(form, locked) {
     byG[m.stage].push(m);
   });
   return `<div class="section">
-    <div class="section-title">⚽ Group Stage Matches <span class="badge">72 matches</span></div>
-    <p class="text-muted" style="margin-bottom:.85rem;font-size:.78rem">Correct winner=5pts · Winner+score=10pts · Exact score bonus=+5pts</p>
+    <div class="section-title">${t("gsTitle")} <span class="badge">${t("gsBadge")}</span></div>
+    <p class="text-muted" style="margin-bottom:.85rem;font-size:.78rem">${t("gsHint")}</p>
     ${Object.entries(byG)
       .map(
         ([grp, ms]) => `
     <div style="margin-bottom:1.1rem">
-      <div style="font-size:.76rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;padding-left:.2rem">${grp}</div>
+      <div style="font-size:.76rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;padding-left:.2rem">${t("groupLabel", grp.replace("Group ", ""))}</div>
       ${ms
         .map((m) => {
           const teams = GROUPS[m.stage.replace("Group ", "")] || [];
@@ -546,9 +749,9 @@ function renderGS(form, locked) {
         <div class="match-header"><span class="mn">${m.num}</span>${m.date} · ${m.a} vs ${m.b}<span class="ms">${m.stage}</span></div>
         <div class="match-teams"><span class="team">${m.a}</span><span class="vs">vs</span><span class="team" style="text-align:right">${m.b}</span></div>
         <div class="match-inputs">
-          ${sel(`gsw_${m.num}`, form[`gs_${m.num}_w`], locked, [m.a, m.b], "— Winner —")}
-          <input type="text" id="gsa_${m.num}" value="${form[`gs_${m.num}_a`] || ""}" placeholder="A score"${locked ? " disabled" : ""}style="text-align:center">
-          <input type="text" id="gsb_${m.num}" value="${form[`gs_${m.num}_b`] || ""}" placeholder="B score"${locked ? " disabled" : ""}style="text-align:center">
+          ${sel(`gsw_${m.num}`, form[`gs_${m.num}_w`], locked, [m.a, m.b], t("winnerPH"))}
+          <input type="text" id="gsa_${m.num}" value="${form[`gs_${m.num}_a`] || ""}" placeholder="${t("scoreA")}"${locked ? " disabled" : ""}style="text-align:center">
+          <input type="text" id="gsb_${m.num}" value="${form[`gs_${m.num}_b`] || ""}" placeholder="${t("scoreB")}"${locked ? " disabled" : ""}style="text-align:center">
         </div></div>`;
         })
         .join("")}
@@ -573,23 +776,23 @@ function renderKO(form, locked) {
     "Final",
   ];
   return `<div class="section">
-    <div class="section-title">🏅 Knockout Predictions <span class="badge">32 matches</span></div>
-    <p class="text-muted" style="margin-bottom:.85rem;font-size:.78rem">Advancing=5pts · Winner+score=10pts · Penalties winner=8pts · Exact score +5 bonus</p>
+    <div class="section-title">${t("koTitle")} <span class="badge">${t("koBadge")}</span></div>
+    <p class="text-muted" style="margin-bottom:.85rem;font-size:.78rem">${t("koHint")}</p>
     ${order
       .filter((s) => byS[s])
       .map(
         (stage) => `
     <div style="margin-bottom:1.1rem">
-      <div style="font-size:.76rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;padding-left:.2rem">${stage}</div>
+      <div style="font-size:.76rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;padding-left:.2rem">${t("koStages")[stage] || stage}</div>
       ${byS[stage]
         .map(
           (m) => `<div class="match-block">
         <div class="match-header"><span class="mn">${m.num}</span>${m.date} · ${m.a} vs ${m.b}<span class="ms">${m.stage}</span></div>
         <div class="match-teams"><span class="team">${m.a}</span><span class="vs">vs</span><span class="team" style="text-align:right">${m.b}</span></div>
         <div class="match-inputs">
-          ${sel(`kow_${m.num}`, form[`ko_${m.num}_w`], locked, ALL_TEAMS, "— Winner —")}
-          <input type="text" id="koa_${m.num}" value="${form[`ko_${m.num}_a`] || ""}" placeholder="A score"${locked ? " disabled" : ""}style="text-align:center">
-          <input type="text" id="kob_${m.num}" value="${form[`ko_${m.num}_b`] || ""}" placeholder="B score"${locked ? " disabled" : ""}style="text-align:center">
+          ${sel(`kow_${m.num}`, form[`ko_${m.num}_w`], locked, ALL_TEAMS, t("winnerPH"))}
+          <input type="text" id="koa_${m.num}" value="${form[`ko_${m.num}_a`] || ""}" placeholder="${t("scoreA")}"${locked ? " disabled" : ""}style="text-align:center">
+          <input type="text" id="kob_${m.num}" value="${form[`ko_${m.num}_b`] || ""}" placeholder="${t("scoreB")}"${locked ? " disabled" : ""}style="text-align:center">
         </div></div>`,
         )
         .join("")}
@@ -601,11 +804,11 @@ function renderKO(form, locked) {
 
 function renderSide(form, locked) {
   return `<div class="section">
-    <div class="section-title">🎲 Fun Side Bets <span class="badge">up to 75 pts</span></div>
+    <div class="section-title">${t("sideTitle")} <span class="badge">${t("sideBadge")}</span></div>
     ${SIDE_BETS.map(
       (s) => `<div class="field">
-      <label>${s.label} <span class="pts">+${s.pts}pts</span></label>
-      <input type="text" id="sb_${s.key}" value="${form[s.key] || ""}" placeholder="Your answer..."${locked ? " disabled" : ""}/>
+      <label>${t("sideLabels")[s.key] || s.label} <span class="pts">+${s.pts} ${t("ptsSuffix")}</span></label>
+      <input type="text" id="sb_${s.key}" value="${form[s.key] || ""}" placeholder="${t("sideAnswerPH")}"${locked ? " disabled" : ""}/>
     </div>`,
     ).join("")}
   </div>`;
@@ -623,28 +826,28 @@ function renderAdmin() {
     return `<div class="admin-row">
       <div class="lb-avatar" style="background:${p.color}">${ini(p.name)}</div>
       <div class="admin-name">${p.name}</div>
-      <div class="text-muted" style="font-size:.75rem">${done ? `${fc} fields saved` : ""}</div>
-      <span class="lb-status${done ? " done" : " pending"}">${done ? "✅ Locked" : "⏳ Pending"}</span>
+      <div class="text-muted" style="font-size:.75rem">${done ? t("fieldsSaved", fc) : ""}</div>
+      <span class="lb-status${done ? " done" : " pending"}">${done ? t("lockedStatus") : t("pendingStatus")}</span>
     </div>`;
   }).join("");
   return `<div style="width:100%;max-width:640px">
     <div class="top-nav">
-      <button class="back-btn" data-action="back">← Back</button>
-      <div class="nav-title">👑 Admin Dashboard</div>
+      <button class="back-btn" data-action="back">${t("back")}</button>
+      <div class="nav-title">${t("adminTitle")}</div>
       <div style="min-width:70px"></div>
     </div>
     <div class="card">
-      <h2 style="color:var(--navy);font-size:1.15rem;margin-bottom:1.1rem">Player Submission Status</h2>
+      <h2 style="color:var(--navy);font-size:1.15rem;margin-bottom:1.1rem">${t("adminStatusHeading")}</h2>
       <div class="score-grid" style="margin-bottom:1.35rem">
-        <div class="score-card"><div class="val">${submitted}</div><div class="lbl">Submitted</div></div>
-        <div class="score-card"><div class="val">${PLAYERS.length - submitted}</div><div class="lbl">Pending</div></div>
-        <div class="score-card"><div class="val">${PLAYERS.length}</div><div class="lbl">Total</div></div>
+        <div class="score-card"><div class="val">${submitted}</div><div class="lbl">${t("submittedLbl")}</div></div>
+        <div class="score-card"><div class="val">${PLAYERS.length - submitted}</div><div class="lbl">${t("pendingLbl")}</div></div>
+        <div class="score-card"><div class="val">${PLAYERS.length}</div><div class="lbl">${t("totalLbl")}</div></div>
       </div>
       ${rows}
       <div class="divider"></div>
-      <p class="text-muted" style="font-size:.76rem">All data is saved to your Google Sheet. Check the <strong>PredictionsMeta</strong> tab for an overview, and <strong>Data_PlayerName</strong> tabs for raw data.</p>
+      <p class="text-muted" style="font-size:.76rem">${t("adminNote")}</p>
       <div class="divider"></div>
-      <button class="btn btn-ghost btn-sm" data-action="reload-status">↻ Refresh Status</button>
+      <button class="btn btn-ghost btn-sm" data-action="reload-status">${t("refreshStatus")}</button>
     </div>
   </div>`;
 }
@@ -658,22 +861,22 @@ function renderLeaderboard() {
       <div class="rank">${medals[i] || i + 1}</div>
       <div class="lb-avatar" style="background:${p.color}">${ini(p.name)}</div>
       <div class="lb-name">${p.name}</div>
-      <span class="lb-status${st.submitted ? " done" : " pending"}">${st.submitted ? "Submitted" : "Pending"}</span>
-      <div style="font-weight:700;color:var(--blue);font-size:.82rem;min-width:48px;text-align:right">— pts</div>
+      <span class="lb-status${st.submitted ? " done" : " pending"}">${st.submitted ? t("lbSubmitted") : t("lbPending")}</span>
+      <div style="font-weight:700;color:var(--blue);font-size:.82rem;min-width:48px;text-align:right">${t("ptsLabel")}</div>
     </div>`;
   }).join("");
   return `<div style="width:100%;max-width:500px">
     <div class="top-nav">
-      <button class="back-btn" data-action="back">← Back</button>
-      <div class="nav-title">📊 Leaderboard</div>
+      <button class="back-btn" data-action="back">${t("back")}</button>
+      <div class="nav-title">${t("lbNavTitle")}</div>
       <div style="min-width:70px"></div>
     </div>
     <div class="card">
-      <h2 style="color:var(--navy);font-size:1.1rem;margin-bottom:.3rem">WC 2026 Standings</h2>
-      <p class="text-muted" style="font-size:.8rem;margin-bottom:1.1rem">Points calculated in the Excel workbook after results are entered</p>
+      <h2 style="color:var(--navy);font-size:1.1rem;margin-bottom:.3rem">${t("lbHeading")}</h2>
+      <p class="text-muted" style="font-size:.8rem;margin-bottom:1.1rem">${t("lbSubtitle")}</p>
       <div style="border:1px solid var(--gray-200);border-radius:var(--radius-sm);overflow:hidden">${rows}</div>
       <div class="divider"></div>
-      <p class="text-muted" style="font-size:.76rem;text-align:center">Open the Excel workbook to see live scores once matches are played</p>
+      <p class="text-muted" style="font-size:.76rem;text-align:center">${t("lbFooter")}</p>
     </div>
   </div>`;
 }
@@ -770,7 +973,7 @@ async function verifyPin() {
       await loadStatuses();
       render();
     } else {
-      S.pinError = "Wrong admin passcode";
+      S.pinError = t("wrongAdmin");
       S.pinInput = ["", "", "", ""];
       render();
     }
@@ -794,7 +997,7 @@ async function verifyPin() {
     S.view = "player";
     render();
   } else {
-    S.pinError = "Wrong passcode — try again";
+    S.pinError = t("wrongPasscode");
     S.pinInput = ["", "", "", ""];
     render();
   }
@@ -807,7 +1010,7 @@ function schedSave() {
   S.isSaving = true;
   const savingEl = document.querySelector(".tag-gold");
   if (savingEl) {
-    savingEl.innerHTML = `<span class="saving-dot"></span>Saving`;
+    savingEl.innerHTML = `<span class="saving-dot"></span>${t("savingInline")}`;
   }
   saveTimer = setTimeout(async () => {
     const { filled } = filledCount(S.currentForm);
@@ -834,12 +1037,12 @@ function schedSave() {
       };
       saveOk = true;
     } catch {
-      toast("⚠ Save failed — check connection");
+      toast(t("saveFailToast"));
     }
     S.isSaving = false;
     const dot = document.querySelector(".saving-dot");
     if (dot && saveOk) {
-      dot.parentElement.innerHTML = "Saved ✓";
+      dot.parentElement.innerHTML = t("savedInline");
       dot.parentElement.style.background = "var(--green-light)";
       dot.parentElement.style.color = "var(--green)";
     }
@@ -867,9 +1070,9 @@ async function doSubmit() {
       submittedAt: nowIso,
       filledCount: filled,
     };
-    toast("💾 Predictions saved to Google Sheets!");
+    toast(t("savedToast"));
   } catch {
-    toast("⚠ Submission failed — please try again");
+    toast(t("submitFailToast"));
   }
   S.isSaving = false;
   S.showConfirm = false;
@@ -884,6 +1087,11 @@ async function loadStatuses() {
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
+document.getElementById("lang-btn").addEventListener("click", () => {
+  S.lang = S.lang === "en" ? "ar" : "en";
+  render();
+});
+
 (async () => {
   await loadStatuses();
   render();
